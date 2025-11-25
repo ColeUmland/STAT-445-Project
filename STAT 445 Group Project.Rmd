@@ -1,0 +1,75 @@
+---
+title: "Group Project STAT 445"
+output: html_document
+date: "2025-11-21"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+#All packages & Libraries Used
+library(dplyr)
+
+# Loading in the data
+Major <- read.csv("C:/Users/Owner/Downloads/STAT305/STAT 445/StatisticsCustomFieldReport.csv")
+RECsummary <- read.csv("C:/Users/Owner/Downloads/STAT305/STAT 445/UsageByMemberSummaryReport.csv")
+
+Major_clean <- Major %>%
+  filter(
+    !is.na(Name) & trimws(Name) != "",
+    !is.na(`Value`) & trimws(`Value`) != ""
+  )
+
+#Reading in Summary dataset
+Summary <- read.csv("C:/Users/Owner/Downloads/STAT305/STAT 445/UsageByMemberSummaryReport.csv")
+
+REC <- inner_join(Summary, Major_clean, by = "Name")
+REC <- REC %>% select(-First.Name, -Last.Name, -Membership.Type, -Program, -X, -X.1)
+REC <- REC %>% 
+  mutate(Gender = ifelse(Gender == "Female", 0, 1))
+# 0 for female and 1 for male
+
+REC <- REC %>%
+  mutate(Class = case_when(
+    Class == "Freshman"  ~ 1,
+    Class == "Sophomore" ~ 2,
+    Class == "Junior"    ~ 3,
+    Class == "Senior"    ~ 4,
+    TRUE                 ~ 0      # anything else
+  ))
+# 1-4 for fresh - senior & 0 for anything else
+
+# ------------------------------------------------------------------------------------------------------
+
+# Loading in college major data set
+College <- read.csv("C:/Users/Owner/Downloads/STAT305/STAT 445/CollegeMajor.csv")
+
+# Joining College to REC according to major and correspond college
+names(REC)[names(REC) == "Value"] <- "Major"
+
+REC <- REC %>%
+  left_join(College, by = "Major")
+
+# -------------------------------------------------------------------------------------------------------
+# Adding information per college (1 if so, else 0)
+# *CLEVER*
+# Because what college you are in isn't linear information in itself, you cant put 1 for one college and 2 for another. Instead, information if they are in a particular college, like 0 or 1 is more adaquate
+
+REC <- REC %>%
+  mutate(
+    School_of_Education = ifelse(College == "School of Education", 1, 0),
+    College_of_Science_and_Health = ifelse(College == "College of Science & Health", 1, 0),
+    Arts_School = ifelse(College == "College of Arts, Social Sciences, & Humanities", 1, 0),
+    Business_College = ifelse(College == "College of Business Administration", 1, 0)
+  )
+head(REC)
+
+# Removing the first two columns as names aren't a help or allowed by the REC director
+REC <- REC %>%
+  select(-1,)
+
+# Data set is now ready
+```
