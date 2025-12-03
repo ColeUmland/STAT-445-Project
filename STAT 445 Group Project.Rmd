@@ -45,7 +45,7 @@ REC <- REC %>%
 # ------------------------------------------------------------------------------------------------------
 
 # Loading in college major data set
-College <- read.csv("C:/Users/Owner/Downloads/STAT305/STAT 445/CollegeMajor.csv")
+College <- read.csv("C:/Users/Owner/Downloads/STAT305/STAT 445/STAT-445-Project/CollegeMajor.csv")
 
 # Joining College to REC according to major and correspond college
 names(REC)[names(REC) == "Value"] <- "Major"
@@ -72,4 +72,16 @@ REC <- REC %>%
   select(-1,)
 
 # Data set is now ready
+
+write.csv(REC, "REC.csv", row.names = FALSE)
+
 ```
+
+
+Cole 1
+```{r}
+REC <- read.csv("REC.csv")
+
+
+```
+
