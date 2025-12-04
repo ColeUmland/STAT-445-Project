@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 #All packages & Libraries Used
 library(dplyr)
 
@@ -81,7 +81,11 @@ write.csv(REC, "REC.csv", row.names = FALSE)
 Cole 1
 ```{r}
 REC <- read.csv("REC.csv")
+attach(REC)
+factor(Gender)
 
+Model <- lm(Quantity ~ Gender + Class + School_of_Education + College_of_Science_and_Health + Arts_School + Business_College)
+summary(Model)
 
 ```
 
