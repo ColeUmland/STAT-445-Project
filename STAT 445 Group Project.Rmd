@@ -84,8 +84,10 @@ REC <- read.csv("REC.csv")
 attach(REC)
 factor(Gender)
 
-Model <- lm(Quantity ~ Gender + Class + School_of_Education + College_of_Science_and_Health + Arts_School + Business_College)
+Model <- lm(Quantity ~ Class + Gender + School_of_Education + College_of_Science_and_Health + Arts_School + Business_College)
 summary(Model)
+
+#Cole Umland
 
 ```
 
