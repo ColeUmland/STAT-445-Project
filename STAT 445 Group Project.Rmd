@@ -91,3 +91,23 @@ summary(Model)
 
 ```
 
+Lucy
+```{r}
+X_train <- read.csv("/Users/lucywarren/Desktop/STAT445/STAT-445-Project/X_train.csv")
+X_test <- read.csv("/Users/lucywarren/Desktop/STAT445/STAT-445-Project/X_test.csv")
+y_train <- read.csv("/Users/lucywarren/Desktop/STAT445/STAT-445-Project/y_train.csv")
+y_train <- read.csv("/Users/lucywarren/Desktop/STAT445/STAT-445-Project/y_train.csv")
+
+convert_to_factors <- function(df, cols_to_convert) {
+  for (col in cols_to_convert) {
+    df[[col]] <- as.factor(df[[col]])
+  }
+  return(df)
+}
+
+vars_to_factor <- c("Gender", "Class", "College")
+
+X_train <- convert_to_factors(X_train, vars_to_factor)
+X_test
+```
+
