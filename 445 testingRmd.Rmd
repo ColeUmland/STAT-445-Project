@@ -1,0 +1,60 @@
+---
+title: "STAT 445 testing"
+author: "Luke Spika"
+date: "2025-12-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+X_train <- read.csv("X_train.csv")
+X_test <- read.csv("X_test.csv")
+Y_train <- read.csv("y_train.csv")
+Y_test <- read.csv("y_test.csv")
+```
+```{r}
+forward <- function(null_model, model_scope, data, alpha = .05){
+  working_model <- null_model
+  
+  repeat{
+    add <- add1(working_model, scope = model_scope, test = "F")
+    cat("addition:\n")
+    print(add)
+    
+    pvalue <- add$"Pr(>F)"[-1]
+    best <- which.min(pvalue)
+    best_pvalue <- pvalue[best]
+    
+    if(best_pvalue >= alpha){
+      print("No more significant predictors")
+      break
+    }
+    
+    best_predictor <- rownames(add)[-1][best]
+    cat("Adding", best_predictor, "\n")
+    
+    add_terms <- attr(terms(working_model), "term.labels")
+    add_new_terms <- c(add_terms, best_predictor)
+    new_formula <- as.formula(paste(all.vars(formula(null_model))[1]," ~",
+                                    paste(add_new_terms, collapse = " + ")))
+    working_model <- lm(new_formula, data = data)
+    
+  }
+  
+  return(working_model)
+  
+}
+
+
+```
+
+```{r}
+test_model <- lm(Quantity ~ 1, data = REC)
+summary(test_model)
+scope <- ~ Gender + Class + School_of_Education + College_of_Science_and_Health + 
+           Arts_School + Business_College
+df <- as.data.frame(REC)
+model <- forward(test_model, scope, df)
+```
